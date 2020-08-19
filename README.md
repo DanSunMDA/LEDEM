@@ -1,6 +1,6 @@
 # LEDEM
 
-Locating Enhancers based on Diverse Epigenetic Marks
+**L**ocating **E**nhancers based on **D**iverse **E**pigenetic **M**arks
 
 ___
 
@@ -74,7 +74,7 @@ The dataset consists of a small number of training examples (2,000 enhancer wind
 ledem.sh preprocessTrain
 ```
 
-\<preprocessTrain\> extracts sequence and epigenetic features from given datasets for training intervals. To extract features, genome FASTA file, annotation GTF file, and one or more epigenetic dataset (histone modifications, DNA methylation, and/or chromatin accessibility) with file paths in CSV files are required.
+\<preprocessTrain\> extracts sequence and epigenetic features from given datasets for training intervals. To extract features, genome FASTA file, you need to provide the annotation GTF file, and one or more epigenetic dataset (histone modifications, DNA methylation, and/or chromatin accessibility) with file paths in CSV files.
 
 Training intervals are composed of positive and negative examples in BED format. The fourth column denotes whether specific intervals are positive (1) or negative examples (0).
 
@@ -85,7 +85,7 @@ chr1 6228100 6228600 0
 chr1 6240500 6241000 0
 ```
 
-Below is an example CSV file of histone modifications. Fewer or more histone marks are allowed. BigWig is a required format to store signal values (i.e. fold change over control).
+Below is an example CSV file of histone modifications. Fewer or more histone marks are allowed. BigWig is the required format to store signal values (i.e. fold change over control).
 
 ```
 H3K4me1,histone_train/Liver_E14.5.H3K4me1.bw
@@ -128,7 +128,7 @@ ledem.sh preprocessTrain -i $INTERVAL_TRAIN -f $FASTA -g $GTF -H $HISTONE_TRAIN 
 ledem.sh preprocessWG
 ```
 
- \<preprocessWG> extracts sequence and epigenetic features for whole-genome windows. It first generates windows of user-defined window and slide sizes and then extracts sequence/epigenetic features just like \<preprocessTrain>. Note that \<preprocessWG> and \<preprocessTrain> should use the same set of epigenetic features. It is recommended that the window size is set to the same size as training intervals (to shorten the runtime of the test dataset, we uses a larger window size).
+ \<preprocessWG> extracts sequence and epigenetic features for whole-genome windows. It first generates windows of user-defined window and slide sizes and then extracts sequence/epigenetic features just like \<preprocessTrain>. Note that \<preprocessWG> and \<preprocessTrain> should use the same set of epigenetic features. It is **recommended** that the window size is set to the same size as training intervals (to shorten the runtime of the test dataset, we uses a larger window size).
 
 A file containig chromosome sizes is required for making genome-wide windows. It is recommended to only list the chromosomes of interest.
 
