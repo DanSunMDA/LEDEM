@@ -144,9 +144,9 @@ ledem.sh preprocessTrain -i $INTERVAL_TRAIN -f $FASTA -g $GTF -H $HISTONE_TRAIN 
 ledem.sh preprocessWG
 ```
 
- \<preprocessWG> extracts sequence and epigenetic features for whole-genome windows. It first generates windows of user-defined window and slide sizes and then extracts sequence/epigenetic features just like \<preprocessTrain>. Note that \<preprocessWG> and \<preprocessTrain> should use the same set of epigenetic features. It is **recommended** that the window size is set to the same size as training intervals (to shorten the runtime of the test dataset, we uses a larger window size).
+ \<preprocessWG> extracts sequence and epigenetic features for whole-genome windows. It first generates windows of user-defined window and slide sizes and then extracts sequence/epigenetic features just like \<preprocessTrain>. Note that \<preprocessWG> and \<preprocessTrain> should use the same set of epigenetic features. It is **recommended** that the window size is set to the same size as training intervals (to shorten the runtime of the test dataset, we used a larger window size in the example below).
 
-A file containig chromosome sizes is required for making genome-wide windows. It is recommended to only list the chromosomes of interest.
+A file containig chromosome sizes is required for making genome-wide windows. It is recommended to list only the chromosomes of interest.
 
 ```
 chr1 195471971
