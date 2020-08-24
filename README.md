@@ -25,7 +25,7 @@ In our original paper, to train an XGBoost model and predict enhancers genome-wi
 
 ## Requirements
 
-Run on Unix/Linux and macOS systems.
+Run on Unix/Linux and macOS systems with GNU Bash 4+.
 
 ### Installation
 
@@ -41,7 +41,7 @@ cd /path/to/LEDEM/scripts/
 chmod u+x *
 ```
 
-**For macOS users only**, the 'readarray' command required by LEDEM is not available in Bash 3. Please update Bash to version 4+ using [Homebrew](https://brew.sh/).
+**For macOS users only**, the 'readarray' command required by LEDEM is not available in the default Bash 3. Please update Bash to version 4+ using [Homebrew](https://brew.sh/).
 
 ```bash
 brew install bash
