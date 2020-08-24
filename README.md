@@ -1,6 +1,6 @@
 # LEDEM
 
-**L**ocating **E**nhancers based on **D**iverse **E**pigenetic **M**arks
+<ins>**L**</ins>ocating <ins>**E**</ins>nhancers based on <ins>**D**</ins>iverse <ins>**E**</ins>pigenetic <ins>**M**</ins>arks
 
 ___
 
@@ -25,6 +25,8 @@ In our original paper, to train an XGBoost model and predict enhancers genome-wi
 
 ## Requirements
 
+Run on Unix/Linux and macOS systems.
+
 ### Installation
 
 ```bash
@@ -37,6 +39,18 @@ LEDEM requires its scripts to be added to the PATH and granted execution permiss
 export PATH=/path/to/LEDEM/scripts/:$PATH
 cd /path/to/LEDEM/scripts/
 chmod u+x *
+```
+
+**For macOS users only**, the 'readarray' command required by LEDEM is not available in Bash 3. Please update Bash to version 4+ using [Homebrew](https://brew.sh/).
+
+```bash
+brew install bash
+```
+
+If Bash is updated successful, running the following command should not generate any output.
+
+```bash
+command -v readarray >/dev/null || echo "Cannot find readarray"
 ```
 
 ### Command line tools
@@ -143,6 +157,8 @@ An example to extract genome-wide features in mouse heart (postnatal day 0) is a
 
 ```bash
 cd test
+mkdir output
+
 FASTA=/path/to/mm10/FASTA
 GTF=/path/to/mm10/GTF
 CHROMINFO=/path/to/mm10/chromSize

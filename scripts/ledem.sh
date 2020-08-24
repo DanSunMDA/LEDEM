@@ -618,10 +618,11 @@ if [[ "$CMD" == "preprocessTrain" ]]; then
 
 	checkINTEGER "-p" $PROCESS
 
-	for tool in bedtools bigWigToBedGraph
+	for tool in readarray bedtools bigWigToBedGraph
 	do 
-		command -v ${tool} >/dev/null 2>&1 || { echo >&2 ${tool}" is missing (required in the PATH)"; toolMissing=1;}
+		bash command -v ${tool} >/dev/null 2>&1 || { echo >&2 ${tool}" is missing (required in the PATH)"; toolMissing=1;}
 	done
+
 	if [[ "$toolMissing" == 1 ]]; then
 		exit 1
 	fi
@@ -712,9 +713,9 @@ if [[ "$CMD" == "preprocessWG" ]]; then
 	checkINTEGER "-w" $WINDOW_SIZE
 	checkINTEGER "-s" $SLIDE_SIZE
 
-	for tool in bedtools bigWigToBedGraph
+	for tool in readarray bedtools bigWigToBedGraph
 	do 
-		command -v ${tool} >/dev/null 2>&1 || { echo >&2 ${tool}" is missing (required in the PATH)"; toolMissing=1;}
+		bash command -v ${tool} >/dev/null 2>&1 || { echo >&2 ${tool}" is missing (required in the PATH)"; toolMissing=1;}
 	done
 	if [[ "$toolMissing" == 1 ]]; then
 		exit 1
