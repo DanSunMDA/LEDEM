@@ -88,7 +88,7 @@ The dataset consists of a small number of training examples (2,000 enhancer wind
 ledem.sh preprocessTrain
 ```
 
-\<preprocessTrain\> extracts sequence and epigenetic features from given datasets for training intervals. To extract features, genome FASTA file, you need to provide the annotation GTF file, and one or more epigenetic dataset (histone modifications, DNA methylation, and/or chromatin accessibility) with file paths in CSV files.
+\<preprocessTrain\> extracts sequence and epigenetic features from given datasets for training intervals. To extract features, you need to provide the genome FASTA file (with an index file), annotation GTF file, and one or more epigenetic dataset (histone modifications, DNA methylation, and/or chromatin accessibility) with file paths in CSV files.
 
 Training intervals are composed of positive and negative examples in BED format. The fourth column denotes whether specific intervals are positive (1) or negative examples (0).
 
@@ -125,6 +125,8 @@ As an example, below is the command for a test run using all features for a smal
 
 ```bash
 cd test
+mkdir output
+
 FASTA=/path/to/mm10/FASTA
 GTF=/path/to/mm10/GTF
 INTERVAL_TRAIN=intervals.bed
@@ -157,8 +159,6 @@ An example to extract genome-wide features in mouse heart (postnatal day 0) is a
 
 ```bash
 cd test
-mkdir output
-
 FASTA=/path/to/mm10/FASTA
 GTF=/path/to/mm10/GTF
 CHROMINFO=/path/to/mm10/chromSize
