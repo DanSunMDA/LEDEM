@@ -50,7 +50,7 @@ brew install bash
 If Bash is updated successful, running the following command should not generate any output.
 
 ```bash
-command -v readarray >/dev/null || echo "Cannot find readarray"
+bash command -v readarray >/dev/null || echo "Cannot find readarray"
 ```
 
 ### Command line tools
