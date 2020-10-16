@@ -21,7 +21,7 @@ ___
 
 LEDEM is an XGBoost-based tool that can integrate diverse epigenomic marks (histone modifications, DNA methylation, and chromatin accessibility data) to achieve accurate enhancer prediction results.
 
-In our original paper, to train an XGBoost model and predict enhancers genome-wide, we extract four sets of sequence/epigenomic features for training or whole-genome windows: 1) sequence features, including GC content, CpG density, and the distance to the closest transcription start site; 2) features from ATAC-seq data, including the maximal fold change of chromatin accessibility relative to the local background signals, and the number of peaks; 3) features from whole-genome bisulfite sequencing (WGBS) data, comprising of average fractional methylation levels, and the variation of DNA methylation levels across multiple tissues or cell types; 4) features from histone modifications (maximal fold changes of H3K4me1, H3K4me3, and H3K27ac signals relative to input signals).
+In our original paper, to train an XGBoost model and predict enhancers genome-wide, we extract four sets of sequence/epigenomic features for training or whole-genome windows: 1) sequence features, including GC content, CpG density, the distance to the closest transcription start site, sequence conservation score, and the number of motifs; 2) features from ATAC-seq data, including the maximal fold change of chromatin accessibility relative to the local background signals, and the number of peaks; 3) features from whole-genome bisulfite sequencing (WGBS) data, comprising of average fractional methylation levels, and the variation of DNA methylation levels across multiple tissues or cell types; 4) features from histone modifications (maximal fold changes of H3K4me1, H3K4me3, and H3K27ac signals relative to input signals).
 
 ## Requirements
 
@@ -72,7 +72,11 @@ bash command -v readarray >/dev/null || echo "Cannot find readarray"
 
 ## Pipeline
 
-The LEDEM pipeline consists of four master commands (\<preprocessTrain>, \<preprocessWG>, \<train>, and \<predict>). See help for more detail:
+The LEDEM pipeline consists of four master commands (\<preprocessTrain>, \<preprocessWG>, \<train>, and \<predict>).
+
+![workflow](misc/workflow.png?raw=true)
+
+See help for more detail:
 
 ```bash
 ledem.sh -h
@@ -80,7 +84,7 @@ ledem.sh -h
 
 ### Example dataset
 
-The dataset consists of a small number of training examples (2,000 enhancer windows covered by P300, 2,000 promoters windows, and 36,000 [9X] random genomic windows; window size=500-bp) in mouse liver (embryonic day 14.5), as well as epigenetic datasets (histone modification, DNA methylation, ATAC-seq) for both liver embryonic day 14.5 and heart postnatal day 0. The liver dataset is used for training, and heart dataset is used for prediction. To test the program, one can either download the [full dataset](https://www.dropbox.com/s/pxtr8v8zb7xhv1z/LEDEM_test.tar.gz?dl=0) (~7GB) or a subset (chr19 only) of the dataset in our Github "test" folder. All coordinates are based on the mouse mm10 genome assembly.
+The dataset consists of a small number of training examples (2,000 enhancer windows covered by P300, 2,000 promoters windows, and 36,000 [9X] random genomic windows; window size=500-bp) in mouse liver (embryonic day 14.5), as well as epigenetic datasets (histone modification, DNA methylation, ATAC-seq) for both liver embryonic day 14.5 and heart postnatal day 0. The liver dataset is used for training, and heart dataset is used for prediction. To test the program, one can download the [full dataset](https://www.dropbox.com/s/pxtr8v8zb7xhv1z/LEDEM_test.tar.gz?dl=0) (~7GB). All coordinates are based on the mouse mm10 genome assembly.
 
 ### Preprocess training dataset
 
@@ -137,6 +141,8 @@ OUTDIR=output
 
 ledem.sh preprocessTrain -i $INTERVAL_TRAIN -f $FASTA -g $GTF -H $HISTONE_TRAIN -M $METHYL_TRAIN -A $ATAC_TRAIN -p 3 -o $OUTDIR
 ```
+
+Optionally, one may include sequence conservation scores and motif density as additional features to enhance the prediction. Sequence conservation scores need to be in BedGraph format (chrom start end score). PhastCons for multiple alignments of many species can be downloaded from UCSC genome browser sites (e.g. [hg38](http://hgdownload.cse.ucsc.edu/goldenpath/hg38/) and [mm10](http://hgdownload.cse.ucsc.edu/goldenpath/mm10/)). The motif file should be in BED format, with one motif per line; for convenience, human and mouse motifs predicted by FIMO using the JASPAR 2020 database can be downloaded [here](https://www.dropbox.com/home/1.Research/LEDEM?preview=motifs.zip).
 
 ### Preprocess whole-genome dataset for prediction
 
