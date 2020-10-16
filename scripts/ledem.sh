@@ -66,7 +66,7 @@ function preprocessWGHelp() {
 	echo "-F, --motif <BED>                A BED file with a motif per line"
 
 	echo ""
-	echo "Feature arguments (should be the same set of features as in preprocessTrain):"
+	echo "Epigenetic feature arguments (should be the same set of features as in preprocessTrain):"
 	echo "-H, --histone <CSV>              A CSV file containing paths to histone modification files"
 	echo "-M, --methyl <CSV>               A CSV file containing paths to DNA methylation files"
 	echo "-A, --atac <CSV>                 A CSV file containing paths to ATAC-seq files"
