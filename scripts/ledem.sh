@@ -30,11 +30,18 @@ function preprocessTrainHelp() {
 	echo "-i, --interval <BED>             An interval file with labels (format: chromosome  start  end  label)"
 	echo "-f, --fasta <FASTA>              A genome FASTA file"
 	echo "-g, --GTF <GTF>                  A GTF annotation file"
+
 	echo ""
-	echo "Feature arguments (at least one should be specified):"
+	echo "Optional sequence feature arguments:"
+	echo "-C, --conserv <BED>              A BED file with conservation score as the 4th column"
+	echo "-F, --motif <BED>                A BED file containing a motif per line"
+
+	echo ""
+	echo "Epigenetic feature arguments (at least one should be specified):"
 	echo "-H, --histone <CSV>              A CSV file containing paths to histone modification files"
 	echo "-M, --methyl <CSV>               A CSV file containing paths to DNA methylation files"
 	echo "-A, --atac <CSV>                 A CSV file containing paths to ATAC-seq files"
+
 	echo ""
 	echo "Optional arguments:"
 	echo "-o, --outdir <DIR>               The path to the output directory (default: the working directory)"
@@ -52,11 +59,18 @@ function preprocessWGHelp() {
 	echo "-f, --fasta <FASTA>              A genome FASTA file"
 	echo "-g, --GTF <GTF>                  A GTF annotation file"
 	echo "-c <CHROMINFO>                   A chromosome size info file (format: chromosome  size)"
+
+	echo ""
+	echo "Optional sequence feature arguments:"
+	echo "-C, --conserv <BEDGRAPH>         A conservation score file (format: chromosome start end score)"
+	echo "-F, --motif <BED>                A BED file with a motif per line"
+
 	echo ""
 	echo "Feature arguments (should be the same set of features as in preprocessTrain):"
 	echo "-H, --histone <CSV>              A CSV file containing paths to histone modification files"
 	echo "-M, --methyl <CSV>               A CSV file containing paths to DNA methylation files"
 	echo "-A, --atac <CSV>                 A CSV file containing paths to ATAC-seq files"
+
 	echo ""
 	echo "Optional arguments:"
 	echo "-w <int>                         Window size (default: 500bp)"
@@ -149,6 +163,16 @@ function preprocessTrain() {
 			export ATAC=$(realpath $1)
 			shift
 			;;
+		-C | --conserv)
+			shift
+			export CONSERV=$(realpath $1)
+			shift
+			;;
+		-F | --motif)
+			shift
+			export MOTIF=$(realpath $1)
+			shift
+			;;
 		-o | --outdir)
 			shift
 			export OUTDIR=$(realpath $1)
@@ -207,6 +231,16 @@ function preprocessWG() {
 		-A | --atac)
 			shift
 			export ATAC=$(realpath $1)
+			shift
+			;;
+		-C | --conserv)
+			shift
+			export CONSERV=$(realpath $1)
+			shift
+			;;
+		-F | --motif)
+			shift
+			export MOTIF=$(realpath $1)
 			shift
 			;;
 		-w)
@@ -426,6 +460,24 @@ function extractFeatures() {
 	paste -d ',' $TMP/summary.csv $TMP/GC_content.dat $TMP/CpG_density.dat $TMP/TSS_dist.dat >$TMP/summary2.csv
 	mv $TMP/summary2.csv $TMP/summary.csv
 	echo ""
+
+	if [[ ! -z "$CONSERV" ]]; then
+		echo "Calculating conservation scores..."
+		bedtools map -a $INTERVAL -b $CONSERV -c 4 -o mean | sed 's/\.$//' | cut -f 4 >$TMP/conserv.dat
+
+		paste -d ',' $TMP/summary.csv $TMP/conserv.dat >$TMP/summary2.csv
+		mv $TMP/summary2.csv $TMP/summary.csv
+		echo ""
+	fi
+
+	if [[ ! -z "$MOTIF" ]]; then
+		echo "Counting number of motifs..."
+		bedtools map -a $INTERVAL -b $MOTIF -c 1 -o count | cut -f 4 >$TMP/motif.dat
+
+		paste -d ',' $TMP/summary.csv $TMP/motif.dat >$TMP/summary2.csv
+		mv $TMP/summary2.csv $TMP/summary.csv
+		echo ""
+	fi
 
 	## Extract histone modification features
 	if [[ ! -z "$HISTONE" ]]; then
@@ -869,7 +921,7 @@ if [[ "$CMD" == "predict" ]]; then
 	fi
 	echo "Begins whole-genome prediction..."
 	ledem_predict.py -i $INPUT -m $MODEL -s $SCALER -o $OUTDIR
-	paste $BED $OUTDIR/scores0.txt >$OUTDIR/scores.bed
+	paste $BED $OUTDIR/scores0.txt | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5}' >$OUTDIR/scores.bed
 	rm $OUTDIR/scores0.txt
 	awk '$5 >= 0.5' $OUTDIR/scores.bed >$OUTDIR/enhancers0.bed # windows with score >= 0.5 are output as enhancers
 
